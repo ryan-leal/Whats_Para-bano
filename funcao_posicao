@@ -1,0 +1,7 @@
+//Encontrar posicao sem conteúdo
+int encontrarPosicao(){
+    while(_contatos[posicao].nome != '\0'){
+        posicao++;
+    }
+    return posicao;
+}
