@@ -5,7 +5,7 @@
 //Struct do contato
 typedef struct {
   char nome[30];
-  char IP[16];
+  char IP[17];
 } tContato;
 
 //Varável/Array global dos contatos
