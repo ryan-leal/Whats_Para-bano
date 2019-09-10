@@ -7,8 +7,10 @@ int main(){
       printf(" Digite 0 para mostrar a lista de amigos\n Digite 1 para adicionar um amigo\n Digite 2 para conversar com um amigo\n Digite 3 para excluir um amigo da lista\n Digite 4 para sair\n");
       printf("/////////////////////////////////////////\n");
       scanf("%d", &escolhaUsuario);
+      //printf("o valor escolhido eh %i ", escolhaUsuario);
+      if (escolhaUsuario >= 0 && escolhaUsuario <= 4){ 
       switch(escolhaUsuario)
-      {
+         {
         case 0:
           //função que mostra a lista de amigos
           break;
@@ -27,8 +29,14 @@ int main(){
         default:
           printf("\e[H\e[2J"); // dá um clear na tela
           printf("Quer quebrar o código, fdp? Digita isso certo\n\n");
-          
+         }
       }
+	else if(escolhaUsuario < 0 || escolhaUsuario > 4){
+		printf("Valor inválido. Digite novamente!\n");
+                getchar();
+					
+	}
+     
     }
     printf("\nFim do Programa! Compre a versão pro para Windows Phone!!");
     return 0;
