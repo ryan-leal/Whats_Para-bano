@@ -11,17 +11,34 @@ typedef struct {
 //Varável/Array global dos contatos
 tContato _contatos[30];
 
+//Função com o número de contatos cadastrados
+int numeroContatos() {
+  int i;
+  for (i=0;strcmp(_contatos[i].nome,"") != 0;i++) {
+  }
+  return i;
+}
+
+
 //Função de Cadastro 
 int cadastrar(){
     int posicao = 0;
-    printf ("////////////////////////////CADASTRO DE USUÁRIOS////////////////////////////////////////\n\n");
+    int resposta;
+
+    do{
+    printf("\33[H\33[2J"); 
+    printf ("_/*\\_ CADASTRO DE USUÁRIOS_/*\\_ \n\n");
     //Função para pesquisar um espaço do array vazio
-    //posicao = encontrarPosicao();
+    posicao = numeroContatos();
     printf ("Digite o nome de contato: ");
     fgets(_contatos[posicao].nome, 30, stdin);
     printf ("Digite o número de IP do contato: ");
     fgets (_contatos[posicao].IP, 16, stdin);
-
+    printf ("\n\nDigite 1 para cadastrar um novo usuário e 0 para retornar ao menu: ");
+    scanf ("%i", &resposta);
+    getchar();
+    } while (resposta != 0);
+    printf("\33[H\33[2J");
   return 0;
 }
 
@@ -32,7 +49,5 @@ int main(void) {
   setlocale(LC_ALL, "Portuguese");
   //Chamando função de Cadastro
   cadastrar();
-  printf("%s",_contatos[0].nome);
-  printf("%s",_contatos[0].IP);
   return 0;
 }
