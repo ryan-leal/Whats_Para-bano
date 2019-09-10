@@ -1,3 +1,4 @@
+//Função que exibe a lista de amigos, sendo passado como parâmetro o número de contatos salvos até o momento.
 void exibirAmigos(int i){
   int aux;
   printf ("***********************LISTA DE AMIGOS*************************");
