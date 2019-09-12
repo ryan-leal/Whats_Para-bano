@@ -48,21 +48,6 @@ int cadastrar(){
   return 0;
 }
 
-void exibirAmigosRemove(int nContatos){
-   int aux;
-  int escolha = 0;
-  printf("\e[H\e[2J");
-  printf ("***********************LISTA DE AMIGOS*************************");
-  for (aux = 0;aux < nContatos;aux++) {
-      if (strcmp(_contatos[aux].nome, "") == 0){
-        break;
-      }
-      printf ("\n[%d]%s",aux,_contatos[aux].nome);
-      printf ("%s\n",_contatos[aux].IP);
-  }
-
-}
-
 //Função que exibe a lista de amigos, sendo passado como parâmetro o número de contatos salvos até o momento.
 void exibirAmigos(int nContatos){
   int aux;
@@ -73,10 +58,6 @@ void exibirAmigos(int nContatos){
       printf ("\n[%d]%s",aux,_contatos[aux].nome);
       printf ("%s\n",_contatos[aux].IP);
   }
-  printf ("\n\nDigite 0 para retornar a tela inicial: ");
-  scanf ("%i", &escolha);
-  getchar();
- printf("\e[H\e[2J"); 
 }
 
 void remover(tContato *amigos, int i, int numeroDeContatos){
@@ -124,7 +105,7 @@ void MenuRemocao(){
     
     //loop para decidir qual contato excluir
     do{
-      exibirAmigosRemove(numeroDeContatos); //exibir a lista de amigos
+      exibirAmigos(numeroDeContatos); //exibir a lista de amigos
 
       printf("Digite o número correspondente ao contato que deseja remover: ");
       scanf("%i", &i);
@@ -138,7 +119,7 @@ void MenuRemocao(){
 
     remover(_contatos, i, numeroDeContatos);
     numeroDeContatos = numeroContatos();
-    exibirAmigosRemove(numeroDeContatos);
+    exibirAmigos(numeroDeContatos);
     
     printf("\n\nDigite 1 para remover outro contato ou 0 para voltar ao menu\n");
     scanf("%i", &escolha);
@@ -147,14 +128,18 @@ void MenuRemocao(){
   }while(escolha==1);
 }
 
-
-
-
+void conversar(){
+  int escolhaUsuario;
+  exibirAmigos(numeroContatos());
+  printf("\n \n Digite o número do contato que deseja se comunicar: ");
+  scanf("%i",&escolhaUsuario);
+  getchar();
+}
 
 int main(){
     //Função para habilitar Acentos
     setlocale(LC_ALL, "Portuguese");
-    int escolhaUsuario;
+    int escolhaUsuario,escolha;
     while (escolhaUsuario != 4){
       printf("/////////////////////////////////////////\n");
       printf(" Digite 0 para mostrar a lista de amigos\n Digite 1 para adicionar um amigo\n Digite 2 para conversar com um amigo\n Digite 3 para excluir um amigo da lista\n Digite 4 para sair\n");
@@ -167,12 +152,19 @@ int main(){
          {
         case 0:
           exibirAmigos(numeroContatos());
+          //segura a fita pra não sair do loop
+          printf ("\n\nDigite 0 para retornar a tela inicial: ");
+          scanf ("%i", &escolha);
+          getchar();
+          printf("\e[H\e[2J"); 
           break;
         case 1:
           cadastrar();
           break;
         case 2:
           //função para conversar
+          conversar();
+          printf("\e[H\e[2J"); 
           break;
         case 3:
           MenuRemocao();
