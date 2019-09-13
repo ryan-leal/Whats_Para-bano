@@ -17,6 +17,7 @@
 /* Variáveis globais usadas na conexão, envio e recebimento de dados*/
 static int sockfd, newFD;
 
+
 /*
 	Função que cria uma conexão com o cliente.
 	A função é bloqueante e fica esperando um pedido de conexão do cliente.
@@ -79,6 +80,7 @@ int enviaMensagem(char *msg, int tamMsg){
 	Retorno: número de bytes recebidos na mensagem
  */
 int recebeMensagem(char *msg, int tamMsg){
+
 	return recv(newFD, msg, tamMsg, 0);
 }
 
@@ -227,8 +229,12 @@ void conversar(){
       while (ret != -1){
 
 
+              memset(msgEnv, 0, sizeof(tContato));
+              memset(msgRec, 0, sizeof(tContato));
+
               /* Recebe uma mensagem pela rede */
               ret = recebeMensagem(msgRec, TAM_MAX);
+
               printf("\nMsg recebida: %s \n", msgRec);
 
               /* Lê uma mensagem do usuário e envia pela rede*/
@@ -243,7 +249,11 @@ void conversar(){
                }
 
 	         ret = enviaMensagem(msgEnv, tamMsg);
+
 	         printf("Enviou uma mensagem com %d bytes\n", ret);
+             if (ret == -1) {
+                break;
+             }
 
 
 
