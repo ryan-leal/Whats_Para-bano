@@ -28,7 +28,6 @@ static int sockfd, newFD;
 	Função que cria uma conexão com o servidor.
 	Ele faz o pedido de conexão ao servidor e espera a resposta.
 	IMPORTANTE: O servidor precisa estar rodando esperando o pedido de conexão para que a mesma seja realizada
-
 	Parametros: uma string contendo o endereço IP do servidor.
 	Retorno: 1 se a conexão foi realizada com sucesso e -1 caso contrário.
  */
@@ -204,6 +203,10 @@ void conversar(){
             }
             contador++;
 
+            memset(msgEnv, 0, sizeof(tContato));
+            memset(msgRec, 0, sizeof(tContato));
+
+
 
 	    /* Lê uma mensagem do usuário e envia pela rede*/
 	    printf("\nDigite a mensagem para enviar: ");
@@ -219,9 +222,15 @@ void conversar(){
 	   ret = enviaMensagem(msgEnv, tamMsg);
 	   printf("Enviou uma mensagem com %d bytes\n", ret);
 
+
 	   /* Recebe uma mensagem pela rede */
 	    ret = recebeMensagem(msgRec, TAM_MAX);
+
 	    printf("\nMsg recebida: %s \n", msgRec);
+
+	    if (ret == -1) {
+                break;
+             }
 
 		}
 	}
