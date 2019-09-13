@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <locale.h>
 
-/* Bibliotecas usadas para criar a conexão usando sockets 
+/* Bibliotecas usadas para criar a conexão usando sockets
 	e enviar dados pela rede*/
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -23,13 +23,13 @@ typedef struct {
 
 /* Variáveis globais usadas na conexão, envio e recebimento de dados*/
 static int sockfd, newFD;
-	
+
 /**
-	Função que cria uma conexão com o servidor. 
-	Ele faz o pedido de conexão ao servidor e espera a resposta. 
-	IMPORTANTE: O servidor precisa estar rodando esperando o pedido de conexão para que a mesma seja realizada 
-	
-	Parametros: uma string contendo o endereço IP do servidor. 
+	Função que cria uma conexão com o servidor.
+	Ele faz o pedido de conexão ao servidor e espera a resposta.
+	IMPORTANTE: O servidor precisa estar rodando esperando o pedido de conexão para que a mesma seja realizada
+
+	Parametros: uma string contendo o endereço IP do servidor.
 	Retorno: 1 se a conexão foi realizada com sucesso e -1 caso contrário.
  */
 
@@ -50,13 +50,13 @@ int conecta(char *ipServidor){
 	server.sin_addr.s_addr = inet_addr(ipServidor);
     server.sin_family = AF_INET;
     server.sin_port = htons(PORTA);
- 
+
     //Connect to remote server
     if (connect(sockfd, (struct sockaddr *)&server,sizeof(server)) < 0){
         printf("Erro de conexão\n");
         return -1;
     }
-     
+
     printf("Conectado\n");
     return 1;
 }
@@ -84,24 +84,26 @@ int numeroContatos() {
 
 
 
-//Função de Cadastro 
+//Função de Cadastro
 int cadastrar(){
     int resposta;
 
     do{
-    printf("\33[H\33[2J"); 
+    system ("clear");
     printf ("_/*\\_ CADASTRO DE USUÁRIOS_/*\\_ \n\n");
     //Função para pesquisar um espaço do array vazio
     posicao = numeroContatos();
     printf ("Digite o nome de contato: ");
-    fgets(_contatos[posicao].nome, 30, stdin);
+    scanf("%[^\n]s",_contatos[posicao].nome);
+    getchar();
     printf ("Digite o número de IP do contato: ");
-    fgets (_contatos[posicao].IP, 16, stdin);
+    scanf ("%[^\n]s",_contatos[posicao].IP);
+    getchar();
     printf ("\n\nDigite 1 para cadastrar um novo usuário e 0 para retornar ao menu: ");
     scanf ("%i", &resposta);
     getchar();
     } while (resposta != 0);
-    printf("\33[H\33[2J");
+    system("clear");
   return 0;
 }
 
@@ -113,24 +115,25 @@ void exibirAmigos(int nContatos){
   printf ("***********************LISTA DE AMIGOS*************************");
   for (aux = 0;aux < nContatos;aux++) {
       printf ("\n[%d]%s",aux,_contatos[aux].nome);
+      printf ("\n");
       printf ("%s\n",_contatos[aux].IP);
   }
 }
 
 void remover(tContato *amigos, int i, int numeroDeContatos){
     i++;
-    
+
     //while para mover o conteudo de todos os contatos para o anterior, isso apenas para os contatos que ficam depois do que foi excluido
-    while(i<numeroDeContatos){ 
-      
+    while(i<numeroDeContatos){
+
       strcpy(amigos[i-1].nome, amigos[i].nome);
       strcpy(amigos[i-1].IP, amigos[i].IP);
       i++;
     }
-    
+
     i--;
     char stringNula[] = "";
-    
+
     //Corrigir o conteudo da ultima string, deixando vazia
     strcpy(amigos[i].nome, stringNula);
     strcpy(amigos[i].IP, stringNula);
@@ -145,11 +148,11 @@ void MenuRemocao(){
   int escolha = 0;
   char verificacao = ' ';
   int numeroDeContatos = 0;
-  
+
   //loop para decidir se continua removendo ou se volta para o menu
   do{
     numeroDeContatos = numeroContatos(); //atualizar o numero de Contato
-    
+
     //loop para decidir qual contato excluir
     do{
       exibirAmigos(numeroDeContatos); //exibir a lista de amigos
@@ -161,17 +164,17 @@ void MenuRemocao(){
       printf("Tem certeza que deseja remover o %s ? [s/n]", _contatos[i].nome);
       scanf("%c", &verificacao);
       getchar();
-      
+
     }while(verificacao!='s');
 
     remover(_contatos, i, numeroDeContatos);
     numeroDeContatos = numeroContatos();
     exibirAmigos(numeroDeContatos);
-    
+
     printf("\n\nDigite 1 para remover outro contato ou 0 para voltar ao menu\n");
     scanf("%i", &escolha);
     system ("clear");
-    
+
   }while(escolha==1);
 }
 
@@ -195,30 +198,32 @@ void conversar(){
   ret=conecta(_contatos[escolhaUsuario].IP);
 	if (ret != -1){
 		system("clear");
-		while (ret != -1) { 
+		while (ret != -1) {
             if (contador == 0) {
-            printf ("Bem-Vindo ao chat Digite /m para voltar ao menu ou /l para voltar para a lista de amigos");
+            printf ("Bem-Vindo ao chat Digite /m para voltar ao menu ou /l para voltar para a lista de amigos\n\n");
             }
             contador++;
-	
-	    /* Recebe uma mensagem pela rede */
-	    ret = recebeMensagem(msgRec, TAM_MAX);
-	    printf("Msg recebida: %s \n", msgRec);		
+
 
 	    /* Lê uma mensagem do usuário e envia pela rede*/
-	    printf("Digite a mensagem para enviar: ");
-	    fgets(msgEnv, TAM_MAX, stdin);
+	    printf("\nDigite a mensagem para enviar: ");
+	    scanf("%[^\n]s",msgEnv);
+	    getchar();
 	    tamMsg = strlen(msgEnv);
-            
+
             //if para sair da conversa/ir para o menu
 	    if ((strcmp(msgEnv,"/m")==0)||(strcmp(msgEnv,"/l")==0)){
 	       break;
-	    } 
-		
+	    }
+
 	   ret = enviaMensagem(msgEnv, tamMsg);
 	   printf("Enviou uma mensagem com %d bytes\n", ret);
 
-		}	
+	   /* Recebe uma mensagem pela rede */
+	    ret = recebeMensagem(msgRec, TAM_MAX);
+	    printf("\nMsg recebida: %s \n", msgRec);
+
+		}
 	}
 }
 
@@ -234,7 +239,7 @@ int main(){
       scanf("%d", &escolhaUsuario);
       getchar();
       //printf("o valor escolhido eh %i ", escolhaUsuario);
-      if (escolhaUsuario >= 0 && escolhaUsuario <= 4){ 
+      if (escolhaUsuario >= 0 && escolhaUsuario <= 4){
       switch(escolhaUsuario)
          {
         case 0:
@@ -243,7 +248,7 @@ int main(){
           printf ("\n\nDigite 0 para retornar a tela inicial: ");
           scanf ("%i", &escolha);
           getchar();
-          system ("clear"); 
+          system ("clear");
           break;
         case 1:
           cadastrar();
@@ -267,9 +272,9 @@ int main(){
 	else if(escolhaUsuario < 0 || escolhaUsuario > 4){
 		printf("Valor inválido. Digite novamente!\n");
                 getchar();
-					
+
 	}
-     
+
     }
     printf("\nFim do Programa! Esse aqui é só o básico, compre a versão pro para Windows Phone!!");
     return 0;
