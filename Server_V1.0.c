@@ -238,7 +238,7 @@ void conversar(){
               /* Recebe uma mensagem pela rede */
               ret = recebeMensagem(msgRec, TAM_MAX);
               
-              if (strcmp(msgRec, "/sair") == 0) {
+              if (strcmp(msgRec, "/s") == 0) {
                  printf("O usuário desconectou-se digite 0 para voltar ao menu ou digite 1 para retornar a lista de amigos: ");
                  scanf("%i", &escolhaUsuario);
                  getchar();
@@ -259,7 +259,7 @@ void conversar(){
 
                //if para sair da conversa/ir para o menu
 	           if ((strcmp(msgEnv,"/m")==0)||(strcmp(msgEnv,"/l")==0)){
-	              enviaMensagem("/sair", tamMsg);
+	              enviaMensagem("/s", tamMsg);
 	              break;
                }
 
