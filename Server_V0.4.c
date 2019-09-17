@@ -323,6 +323,7 @@ int main(){
          }
       }
 	else if(escolhaUsuario < 0 || escolhaUsuario > 4){
+		system ("clear");
 		printf("Valor inválido. Digite novamente!\n");
                 getchar();
 
