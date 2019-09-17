@@ -219,9 +219,12 @@ void conversar(){
 
   do {
       exibirAmigos(numeroContatos());
-      printf("\n \n Digite o número do contato que deseja se comunicar: ");
+      printf("\n \n Digite o número do contato que deseja se comunicar ou digite 123: ");
       scanf("%i",&escolhaUsuario);
       getchar();
+      if (escolhaUsuario == 123) {
+        return;
+      }
       system ("clear");
       ret = conecta();
       system ("clear");
@@ -234,6 +237,17 @@ void conversar(){
 
               /* Recebe uma mensagem pela rede */
               ret = recebeMensagem(msgRec, TAM_MAX);
+              
+              if (strcmp(msgRec, "/sair") == 0) {
+                 printf("O usuário desconectou-se digite 0 para voltar ao menu ou digite 1 para retornar a lista de amigos: ");
+                 scanf("%i", &escolhaUsuario);
+                 getchar();
+                        if (escolhaUsuario == 0) {
+                            return;
+                        } else if (escolhaUsuario == 1) {
+                            break;
+                        }
+              }
 
               printf("\nMsg recebida: %s \n", msgRec);
 
@@ -245,12 +259,13 @@ void conversar(){
 
                //if para sair da conversa/ir para o menu
 	           if ((strcmp(msgEnv,"/m")==0)||(strcmp(msgEnv,"/l")==0)){
+	              enviaMensagem("/sair", tamMsg);
 	              break;
                }
 
 	         ret = enviaMensagem(msgEnv, tamMsg);
 
-	         printf("Enviou uma mensagem com %d bytes\n", ret);
+	        // printf("Enviou uma mensagem com %d bytes\n", ret);
              if (ret == -1) {
                 break;
              }
@@ -317,3 +332,4 @@ int main(){
     printf("\nFim do Programa! Esse aqui é só o básico, compre a versão pro para Windows Phone!!");
     return 0;
 }
+
