@@ -179,61 +179,76 @@ void MenuRemocao(){
 
 void conversar(){
   int contador = 0;
-  int escolhaUsuario;
-  exibirAmigos(numeroContatos());
-  printf("\n \n Digite o número do contato que deseja se comunicar: ");
-  scanf("%i",&escolhaUsuario);
-  getchar();
-
-  //codigo do maritão
   int ret;
-	int tamMsg;
-	char msgEnv[TAM_MAX];
-	char msgRec[TAM_MAX];
+  int tamMsg;
+  char msgEnv[TAM_MAX];
+  char msgRec[TAM_MAX];
+  int escolhaUsuario;
 
-	/* Pede para se conectar no servidor */
-	//ret	= conecta("150.165.201.14");
-  //ip previamente estabelecido para poder conversar com amigo
-  ret=conecta(_contatos[escolhaUsuario].IP);
-	if (ret != -1){
-		system("clear");
-		while (ret != -1) {
-            if (contador == 0) {
-            printf ("Bem-Vindo ao chat Digite /m para voltar ao menu ou /l para voltar para a lista de amigos\n\n");
-            }
-            contador++;
-
-            memset(msgEnv, 0, sizeof(tContato));
-            memset(msgRec, 0, sizeof(tContato));
-
-
-
-	    /* Lê uma mensagem do usuário e envia pela rede*/
-	    printf("\nDigite a mensagem para enviar: ");
-	    scanf("%[^\n]s",msgEnv);
-	    getchar();
-	    tamMsg = strlen(msgEnv);
-
-            //if para sair da conversa/ir para o menu
-	    if ((strcmp(msgEnv,"/m")==0)||(strcmp(msgEnv,"/l")==0)){
-	       break;
-	    }
-
-	   ret = enviaMensagem(msgEnv, tamMsg);
-	   printf("Enviou uma mensagem com %d bytes\n", ret);
+  do {
+      exibirAmigos(numeroContatos());
+      printf("\n \n Digite o número do contato que deseja se comunicar ou digite 123: ");
+      scanf("%i",&escolhaUsuario);
+      getchar();
+      if (escolhaUsuario == 123) {
+        return;
+      }
+      system ("clear");
+      ret = conecta(_contatos[escolhaUsuario].IP);
+      system ("clear");
+      printf ("Bem-Vindo ao chat Digite /m para voltar ao menu ou /l para voltar para a lista de amigos\n\n");
+      while (ret != -1){
 
 
-	   /* Recebe uma mensagem pela rede */
-	    ret = recebeMensagem(msgRec, TAM_MAX);
+              memset(msgEnv, 0, sizeof(tContato));
+              memset(msgRec, 0, sizeof(tContato));
 
-	    printf("\nMsg recebida: %s \n", msgRec);
 
-	    if (ret == -1) {
-                break;
-             }
+              /* Lê uma mensagem do usuário e envia pela rede*/
+              printf("\nDigite a mensagem para enviar: ");
+              scanf("%[^\n]s",msgEnv);
+              getchar();
+              tamMsg = strlen(msgEnv);
 
-		}
-	}
+               //if para sair da conversa/ir para o menu
+	           if ((strcmp(msgEnv,"/m")==0)||(strcmp(msgEnv,"/l")==0)){
+	              enviaMensagem("/s", tamMsg);
+	              break;
+               }
+
+	         ret = enviaMensagem(msgEnv, tamMsg);
+
+	        // printf("Enviou uma mensagem com %d bytes\n", ret);
+             
+	    
+              /* Recebe uma mensagem pela rede */
+              ret = recebeMensagem(msgRec, TAM_MAX);
+              
+              if (strcmp(msgRec, "/s") == 0) {
+                 printf("\n\nO usuário desconectou-se digite 0 para voltar ao menu ou digite 1 para retornar a lista de amigos: ");
+                 scanf("%i", &escolhaUsuario);
+                 getchar();
+                        if (escolhaUsuario == 0) {
+                            return;
+                        } else if (escolhaUsuario == 1) {
+                            break;
+                        }
+              }
+
+              printf("\nMsg recebida: %s \n", msgRec);
+	
+              if (ret == -1) {
+                  break;
+              }
+
+
+
+
+	  }
+	//Comparação para ficar na lista
+  }while((strcmp(msgEnv, "/m")!=0));
+  system ("clear");
+
 }
 
 int main(){
