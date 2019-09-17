@@ -290,12 +290,12 @@ int main(){
           break;
         default:
           system ("clear"); // dá um clear na tela
-          printf("Quer quebrar o código, fdp? Digita isso certo\n\n");
          }
       }
 	else if(escolhaUsuario < 0 || escolhaUsuario > 4){
 		printf("Valor inválido. Digite novamente!\n");
                 getchar();
+		system ("clear");
 
 	}
 
