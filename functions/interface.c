@@ -28,7 +28,7 @@ int main(){
           break;
         default:
           printf("\e[H\e[2J"); // dá um clear na tela
-          printf("Quer quebrar o código, fdp? Digita isso certo\n\n");
+          printf("Digite uma opção válida, por favor\n\n");
          }
       }
 	else if(escolhaUsuario < 0 || escolhaUsuario > 4){
